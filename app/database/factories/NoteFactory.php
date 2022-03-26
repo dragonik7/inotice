@@ -3,9 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Note;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class NoticeFactory extends Factory
+class NoteFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -23,7 +25,9 @@ class NoticeFactory extends Factory
         return [
             'title' => $title,
             'text' => $text,
-            'user_id' => 1
+            'image'=>$this->faker->imageUrl(),
+            'user_id' => User::get()->random()->id,
+            'tag_id' => Tag::get()->random()->id,
         ];
     }
 }

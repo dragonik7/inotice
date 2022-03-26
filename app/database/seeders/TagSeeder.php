@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,7 @@ class TagSeeder extends Seeder
 
             $dataArr = [
                 'name' => $name,
-                'user_id' => 1
+                'user_id' => User::get()->random()->id
             ];
 
             DB::table('tags')->insert($dataArr);
