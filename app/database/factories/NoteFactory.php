@@ -19,7 +19,7 @@ class NoteFactory extends Factory
     public function definition()
     {
         $title = $this->faker->title;
-        $text = $this->faker->sentence(rand(500,1000));
+        $text = $this->faker->sentence(rand(10,20));
 
 
         return [

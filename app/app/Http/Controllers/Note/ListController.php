@@ -17,6 +17,7 @@ class ListController extends Controller
     public function __invoke()
     {
         $gg = Note::all();
+        dd($gg);
         return $gg;
     }
 }

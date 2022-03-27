@@ -7,7 +7,7 @@ use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Tests\Integration\Http\Fixtures\PostResource;
 
-class ShowController extends Controller
+class DetailController extends Controller
 {
     /**
      * Handle the incoming request.
