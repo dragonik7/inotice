@@ -14,6 +14,8 @@ class Note extends Model
         'title',
         'text',
         'image',
+        'user_id',
+        'tag_id'
     ];
 
     public function tags(){

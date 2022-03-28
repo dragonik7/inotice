@@ -18,7 +18,7 @@ class NoteFactory extends Factory
     protected $model = Note::class;
     public function definition()
     {
-        $title = $this->faker->title;
+        $title = $this->faker->sentence(rand(1,5));
         $text = $this->faker->sentence(rand(10,20));
 
 

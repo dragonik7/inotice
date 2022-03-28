@@ -16,8 +16,8 @@ class ListController extends Controller
      */
     public function __invoke()
     {
-        $gg = Note::all();
-        dd($gg);
-        return $gg;
+        $notes = Note::all();
+        //return view('note.list', compact('notes'));
+        return $notes;
     }
 }
