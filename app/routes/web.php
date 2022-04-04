@@ -33,18 +33,18 @@ Route::group(
             }
         );
         Route::group(
-            ['prefix' => '/notes', 'namespace'=>'Note'],
+            ['prefix' => '/notes'],
             function () {
-                Route::get('/list', 'ListController')->name('list');
-                Route::get('/detail/{note}', 'DetailController')->name('detail');
+                Route::get('/list', 'NotesController@list')->name('list');
+                Route::get('/detail', 'NotesController@detail')->name('detail');
 
-                Route::get('/create', 'CreateController')->name('create');
-                Route::post('', 'StoreController')->name('store');
+                Route::get('/create', 'NotesController@create')->name('create');
+                Route::post('', 'NotesController@store')->name('store');
 
-                Route::get('/{note}/edit', 'EditController')->name('edit');
-                Route::patch('/{note}', 'UpdateController')->name('update');
+                Route::get('/edit', 'NotesController@Edit')->name('edit');
+                Route::patch('', 'NotesController@update')->name('update');
 
-                Route::delete('/{note}', 'DestroyController')->name('destroy');
+                Route::delete('', 'NotesController@Destroy')->name('destroy');
             }
         );
     }

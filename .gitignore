@@ -1,0 +1,4 @@
+/database/postgres/data/
+/app/vendor/
+/.idea/
+/node_modeles/
