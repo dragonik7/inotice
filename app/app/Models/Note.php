@@ -19,7 +19,13 @@ class Note extends Model
     ];
 
     public function tags(){
-        return $this->belongsTo(Note::class);
+        return $this->belongsTo(Tag::class, 'tag_id', 'id');
+    }
+    public function users(){
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+    public function favorite(){
+        return $this->belongsToMany(User::class,'favorites', 'note_id', 'user_id');
     }
 
 }

@@ -36,6 +36,7 @@ Route::group(
             ['prefix' => '/notes'],
             function () {
                 Route::get('/list', 'NotesController@list')->name('list');
+                Route::get('/favorites', 'NotesController@favorites')->name('favorites');
                 Route::get('/detail', 'NotesController@detail')->name('detail');
 
                 Route::get('/create', 'NotesController@create')->name('create');
