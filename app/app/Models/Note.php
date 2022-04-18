@@ -24,8 +24,7 @@ class Note extends Model
     public function users(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-    public function favorite(){
+    public function favoriteUser(){
         return $this->belongsToMany(User::class,'favorites', 'note_id', 'user_id');
     }
-
 }

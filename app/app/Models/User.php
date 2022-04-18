@@ -47,7 +47,7 @@ class User extends Authenticatable
     public function tags(){
         return $this->hasMany(Tag::class, 'user_id', 'id');
     }
-    public function favorite(){
-        return $this->belongsToMany(Note::class,'favorites', 'user_id', 'note_id');
+    public function favoriteNote(){
+        return $this->belongsToMany(Note::class,'favorites','user_id','note_id');
     }
 }
