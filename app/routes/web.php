@@ -38,19 +38,25 @@ Route::group(
                 Route::get('/list', 'NotesController@list')->name('list');
                 Route::get('/detail', 'NotesController@detail')->name('detail');
 
-                Route::get('/create', 'NotesController@create')->name('create');
                 Route::post('', 'NotesController@store')->name('store');
-
-                Route::get('/edit', 'NotesController@Edit')->name('edit');
                 Route::patch('', 'NotesController@update')->name('update');
 
                 Route::delete('', 'NotesController@Destroy')->name('destroy');
-            }
-        );
+            });
         Route::group(
-            ['prefix' => '/favorite'],function(){
+            ['prefix' => '/favorite'],
+            function () {
                 Route::get('/list', 'FavoriteController@list')->name('favor_list');
                 Route::post('/create', 'FavoriteController@create')->name('create_favorite');
-        });
+            });
+        Route::group(
+            ['prefix' => '/user'],
+            function () {
+                Route::get('/search', 'UserController@search')->name('search_user');
+                Route::get('/detail', 'UserController@detail')->name('detail_user');
+                Route::post('', 'UserController@createSub')->name('create_sub');
+                Route::delete('', 'UserController@destroySub')->name('destroy_sub');
+                Route::patch('', 'UserController@update')->name('update_user');
+            });
     }
 );

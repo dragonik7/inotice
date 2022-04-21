@@ -16,16 +16,17 @@ class NoteFactory extends Factory
      */
 
     protected $model = Note::class;
+
+    /**
+     * @throws \Exception
+     */
     public function definition()
     {
-        $title = $this->faker->sentence(rand(1,5));
-        $text = $this->faker->sentence(rand(10,20));
-
 
         return [
-            'title' => $title,
-            'text' => $text,
-            'image'=>$this->faker->imageUrl(),
+            'title' => $this->faker->sentence(rand(1,5)),
+            'text' => $this->faker->sentence(rand(10,20)),
+            'photos' => json_encode($this->faker->image),
             'user_id' => User::get()->random()->id,
             'tag_id' => Tag::get()->random()->id,
         ];

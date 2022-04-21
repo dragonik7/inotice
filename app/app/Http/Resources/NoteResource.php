@@ -18,7 +18,7 @@ class NoteResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'text' => $this->text,
-            'image' => $this->image,
+            'photos' => json_decode($this->photos),
             'user_id' => $this->user_id,
             'tag_id' => $this->tag_id
         ];

@@ -17,7 +17,7 @@ class CreateNotesTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('text')->nullable();
-            $table->text('image')->nullable();
+            $table->json('photos')->nullable();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('tag_id')->constrained('tags');
             $table->timestamps();

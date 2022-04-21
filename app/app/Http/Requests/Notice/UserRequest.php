@@ -4,7 +4,7 @@ namespace App\Http\Requests\Notice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class NoteRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,11 @@ class NoteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id'=>'Integer',
-            'title'=>'String|max:50',
-            'text' => 'String',
-            'photos[]'=> '',
-            'tag_id' =>'Integer',
+            'id' => 'Integer',
+            'name' => 'String|max:50',
+            'email'=>'email',
+            'avatar'=>'',
+            'password'=>'current_password'
         ];
     }
 }
