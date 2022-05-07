@@ -24,11 +24,11 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'Integer',
-            'name' => 'String|max:50',
+            'name' => 'string|max:50',
             'email'=>'email',
-            'avatar'=>'',
-            'password'=>'current_password'
+            'avatar'=>'image',
+            'password'=>'',
+
         ];
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\NoteFilter;
+use App\Http\Requests\Notice\FilterNoteRequest;
 use App\Http\Requests\Notice\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotesController extends Controller
 {
@@ -48,5 +48,13 @@ class NotesController extends Controller
     {
         $note = $request->get('id');
         Note::find($note)->delete();
+    }
+
+    public function filter(FilterNoteRequest $request)
+    {
+        $data = $request->input();
+        $filter = app()->make(NoteFilter::class, ['queryParams' => array_filter($data)]);
+        $note = Note::filter($filter)->get();
+        dd($note);
     }
 }

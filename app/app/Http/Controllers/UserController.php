@@ -3,19 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Notice\SubscriberRequest;
-use App\Http\Requests\Notice\UserRequest;
 use App\Http\Resources\SubscriberResource;
 use App\Http\Resources\UserResource;
 use App\Models\Subscriber;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function search(UserRequest $request)
+    public function search(Request $request)
     {
         $name = $request->get('name');
-        $userList = User::query()->where('name', 'ilike', "$name%")->get();
+        $userList = User::query()->where('name', 'ilike', "%$name%")->get();
         return SubscriberResource::collection($userList);
     }
 
@@ -54,12 +56,59 @@ class UserController extends Controller
         return new SubscriberResource($user);
     }
 
-    public function update(UserRequest $request)
+    public function update(Request $request)
     {
-        $data = $request->input();
+        $data = $request->validate([
+            'name' => 'string|max:50',
+            'email' => 'email',
+            'avatar' => 'image',
+            'password' => 'current_password'
+        ]);
         $data['avatar'] = json_encode(env('APP_URL') . '/storage' . $request->file('avatar')
                 ->store('avatar_user', 'public'));
         $user = User::find($request->get('id'))->update($data);
-        dd($user);
+        return new UserResource($user);
+    }
+
+    public function registration(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'string|max:50',
+            'email' => 'email',
+            'password' => 'string|min:8'
+        ]);
+        $data['password'] = Hash::make($data['password']);
+        $data['remember_token'] = Str::random(10);
+        $data['avatar'] = json_encode(env('APP_URL') . '/storage' . $request->file('avatar')
+                ->store('avatar_user', 'public'));
+        $user = User::create($data);
+        return new UserResource($user);
+    }
+
+    public function auth(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+            'device_name' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Неправильный email'],
+            ]);
+        }
+        return $user->createToken($request->device_name)->plainTextToken;
+//        $credentials = $request->validate([
+//            'email' => ['required', 'email'],
+//            'password' => 'required',
+//        ]);
+//        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+//            $user = Auth::user();
+//            $user->createToken($credentials['password']);
+//            return new UserResource($user);
+//        }
     }
 }

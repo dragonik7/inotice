@@ -4,7 +4,7 @@ namespace App\Http\Requests\Notice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FavoriteRequest extends FormRequest
+class FilterNoteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class FavoriteRequest extends FormRequest
     public function rules()
     {
         return [
-            'note_id'=>'Integer'
+            'title'=>'String',
+            'tag_id'=>'Integer',
+            'created_at'=>'Array',
         ];
     }
 }

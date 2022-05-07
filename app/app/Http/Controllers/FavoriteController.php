@@ -6,8 +6,7 @@ use App\Http\Requests\Notice\FavoriteRequest;
 use App\Http\Resources\FavoriteResource;
 use App\Models\Favorite;
 use App\Models\Note;
-use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class FavoriteController extends Controller
@@ -17,6 +16,7 @@ class FavoriteController extends Controller
     public function create(FavoriteRequest $request)
     {
         $data = $request->input();
+        $data['user_id'] = Auth::id();
         $is_exist = Favorite::where('note_id', '=', $data['note_id'])
             ->where('user_id', '=', $data['user_id'])
             ->exists();
@@ -31,15 +31,14 @@ class FavoriteController extends Controller
 
     }
 
-    public function list(FavoriteRequest $request)
+    public function list()
     {
-        $data = $request->get('user_id');
+        $userId = Auth::id();
         $noteslist = Note::query()
-            ->leftJoin('favorites', 'notes.id', '=', 'favorites.note_id')
-            ->selectRaw("notes.*,case when notes.id = favorites.note_id and favorites.user_id = $data then true else false end as is_selected")
+            ->rightJoin('favorites', 'notes.id', '=', 'favorites.note_id')
+            ->selectRaw("notes.*,case when notes.id = favorites.note_id and favorites.user_id = $userId then true else false end as is_selected")
             ->orderBy('notes.id', 'asc')
             ->get();
-//        dd($noteslist);
         return FavoriteResource::collection($noteslist);
     }
 }

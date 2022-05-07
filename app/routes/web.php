@@ -37,6 +37,7 @@ Route::group(
             function () {
                 Route::get('/list', 'NotesController@list')->name('list');
                 Route::get('/detail', 'NotesController@detail')->name('detail');
+                Route::get('/filter', 'NotesController@filter')->name('filter');
 
                 Route::post('', 'NotesController@store')->name('store');
                 Route::patch('', 'NotesController@update')->name('update');
@@ -44,7 +45,7 @@ Route::group(
                 Route::delete('', 'NotesController@Destroy')->name('destroy');
             });
         Route::group(
-            ['prefix' => '/favorite'],
+            ['prefix' => '/favorite','middleware'=>'auth:sanctum'],
             function () {
                 Route::get('/list', 'FavoriteController@list')->name('favor_list');
                 Route::post('/create', 'FavoriteController@create')->name('create_favorite');
@@ -54,9 +55,15 @@ Route::group(
             function () {
                 Route::get('/search', 'UserController@search')->name('search_user');
                 Route::get('/detail', 'UserController@detail')->name('detail_user');
+                Route::post('/auth', 'UserController@auth')->name('auth_user');
+                Route::patch('', 'UserController@update')->name('update_user');
+                Route::post('', 'UserController@registration')->name('create_user');
+            });
+        Route::group(
+            ['prefix' => '/sub'],
+            function () {
                 Route::post('', 'UserController@createSub')->name('create_sub');
                 Route::delete('', 'UserController@destroySub')->name('destroy_sub');
-                Route::patch('', 'UserController@update')->name('update_user');
             });
     }
 );
