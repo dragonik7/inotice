@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,22 @@ Route::get('/', function () {
 Route::group(
     ['prefix' => '/notice'],
     function () {
+        Route::group(
+            ['prefix' => '/notes'],
+            function () {
+                Route::get('', 'NotesController@list')->name('note.list');
+                Route::get('/detail', 'NotesController@detail')->name('note.detail');
+                Route::get('/filter', 'NotesController@filter')->name('note.filter');
+
+
+                Route::get('/create', 'NotesController@create')->name('note.create');
+                Route::post('', 'NotesController@store')->name('note.store');
+
+
+                Route::patch('', 'NotesController@update')->name('note.update');
+
+                Route::delete('/detail', 'NotesController@Destroy')->name('note.destroy');
+            });
 
         Route::group(
             ['prefix' => '/tags'],
@@ -30,40 +47,38 @@ Route::group(
                 Route::get('/list', 'TagsController@list');
                 Route::get('/detail', 'TagsController@detail');
 
-            }
-        );
-        Route::group(
-            ['prefix' => '/notes'],
-            function () {
-                Route::get('/list', 'NotesController@list')->name('list');
-                Route::get('/detail', 'NotesController@detail')->name('detail');
-                Route::get('/filter', 'NotesController@filter')->name('filter');
-
-                Route::post('', 'NotesController@store')->name('store');
-                Route::patch('', 'NotesController@update')->name('update');
-
-                Route::delete('', 'NotesController@Destroy')->name('destroy');
             });
+
         Route::group(
-            ['prefix' => '/favorite','middleware'=>'auth:sanctum'],
+            ['prefix' => '/favorite', 'middleware' => 'auth:sanctum'],
             function () {
-                Route::get('/list', 'FavoriteController@list')->name('favor_list');
-                Route::post('/create', 'FavoriteController@create')->name('create_favorite');
+                Route::get('/list', 'FavoriteController@list')->name('fav.list');
+                Route::post('/create', 'FavoriteController@create')->name('fav.create');
             });
         Route::group(
             ['prefix' => '/user'],
             function () {
-                Route::get('/search', 'UserController@search')->name('search_user');
-                Route::get('/detail', 'UserController@detail')->name('detail_user');
-                Route::post('/auth', 'UserController@auth')->name('auth_user');
-                Route::patch('', 'UserController@update')->name('update_user');
-                Route::post('', 'UserController@registration')->name('create_user');
+                Route::get('/search', 'UserController@search')->name('user.search');
+                Route::get('/detail', 'UserController@detail')->name('user.detail');
+
+                Route::get('/registration', function (){if(Auth::check()){return redirect(route('note.list'));}return view('user.registration');})->name('user.reg');
+                Route::post('/registration', 'UserController@registration')->name('user.registration');
+
+                Route::get('/login', function (){
+                    if(Auth::check()) {
+                        return redirect(route('note.list'));
+                    }
+                    return view('user.auth');})->name('user.auth');
+                Route::post('/login', 'UserController@login')->name('user.login');
+                Route::get('/logout','UserController@logout')->name('user.logout');
+
+                Route::patch('', 'UserController@update')->name('user.update');
             });
         Route::group(
             ['prefix' => '/sub'],
             function () {
-                Route::post('', 'UserController@createSub')->name('create_sub');
-                Route::delete('', 'UserController@destroySub')->name('destroy_sub');
+                Route::post('', 'SubscriberController@createSub')->name('sub.create');
+                Route::delete('', 'SubscriberController@destroySub')->name('sub.destroy');
             });
     }
 );

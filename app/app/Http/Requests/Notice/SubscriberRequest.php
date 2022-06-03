@@ -25,7 +25,6 @@ class SubscriberRequest extends FormRequest
     {
         return [
             'user_id' => 'Integer',
-            'subscriber_id'=>'Integer'
         ];
     }
 }

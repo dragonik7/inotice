@@ -7,34 +7,63 @@ use App\Http\Requests\Notice\FilterNoteRequest;
 use App\Http\Requests\Notice\NoteRequest;
 use App\Http\Resources\NoteResource;
 use App\Models\Note;
+use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
 
 class NotesController extends Controller
 {
     protected $message;
 
-    public function list(NoteRequest $request)
+//    public function list(NoteRequest $request)
+//    {
+//        $userId = $request->get('user_id');//Потом поменяй на Auth
+//        $notesList = Note::query()->where('user_id', $userId)->get();
+//        $notesList = NoteResource::collection($notesList);
+//        return view('note.list', compact('notesList'));
+//    }
+    public function list()
     {
-        $userId = $request->get('user_id');
-        $noteslist = Note::query()->where('user_id', $userId)->get();
-        return NoteResource::collection($noteslist);
+        $notesList = Note::paginate(12);
+        $notesList = NoteResource::collection($notesList);
+        return view('note.list', compact('notesList'));
     }
 
     public function detail(NoteRequest $request)
     {
         $noteId = $request->get('id');
         $note = Note::find($noteId);
-        return new NoteResource($note);
+        $userName = $note->users->name;
+        $tagName = $note->tags->name;
+        $note = new NoteResource($note);
+        return view('note.detail', compact('note', 'userName', 'tagName'));
     }
 
     public function store(NoteRequest $request)
     {
-//        dd($request->photos[1]);
         $data = $request->input();
-        foreach ($request->file('photos') as $photo) {
-            $paths[] = env('APP_URL') . 'storage/' . $photo->store('photos_notes', 'public');
+        if ($request->hasFile('photos')) {
+            $paths = array();
+            foreach ($request->file('photos') as $photo) {
+                $paths[] = env('APP_URL') . 'storage/' . $photo->store('photos_notes', 'public');
+            }
+            $data['photos'] = json_encode($paths);
         }
-        $data['photos'] = json_encode($paths);
+        $data['user_id'] = Auth::id();
         Note::create($data);
+        return redirect()->route('note.list');
+    }
+
+    public function create()
+    {
+        $tags = Tag::all();
+        return view('note.create', compact('tags'));
+    }
+
+    public function edit(NoteRequest $request)
+    {
+        $tags = Tag::all();
+        $post = Note::find($request->get('id'));
+        return view('post.edit', compact('tags', 'post'));
     }
 
     public function update(NoteRequest $request)

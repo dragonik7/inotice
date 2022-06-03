@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Subscriber;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -19,34 +20,6 @@ class UserController extends Controller
         $name = $request->get('name');
         $userList = User::query()->where('name', 'ilike', "%$name%")->get();
         return SubscriberResource::collection($userList);
-    }
-
-    public function createSub(SubscriberRequest $request)
-    {
-        $data = $request->input();
-        $is_exist = Subscriber::where('subscriber_id', '=', $data['subscriber_id'])
-            ->where('user_id', '=', $data['user_id'])
-            ->exists();
-        if (!$is_exist) {
-            Subscriber::create($data);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function destroySub(SubscriberRequest $request)
-    {
-        $data = $request->input();
-        $pole = Subscriber::where('subscriber_id', '=', $data['subscriber_id'])
-            ->where('user_id', '=', $data['user_id']);
-        $is_exist = $pole->exists();
-        if ($is_exist) {
-            $pole->delete();
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public function detail(Request $request)
@@ -73,42 +46,52 @@ class UserController extends Controller
     public function registration(Request $request)
     {
         $data = $request->validate([
-            'name' => 'string|max:50',
-            'email' => 'email',
-            'password' => 'string|min:8'
+            'name' => 'string|max:50|required',
+            'email' => 'email|required',
+            'password' => 'string|min:8|required'
         ]);
+        if (User::query()->where('email', $data['email'])->exists()){
+            redirect(route('user.registration'))->withErrors([
+                'email' => 'Такой пользователь зарегестрирован',
+            ]);
+        }
         $data['password'] = Hash::make($data['password']);
         $data['remember_token'] = Str::random(10);
         $data['avatar'] = json_encode(env('APP_URL') . '/storage' . $request->file('avatar')
                 ->store('avatar_user', 'public'));
         $user = User::create($data);
-        return new UserResource($user);
+        if ($user){
+            Auth::login($user);
+            return redirect()->route('note.list');
+        }
+        return redirect(route(('user.login')))->withErrors([
+            'formErrors'=>'Произошла ошибка при сохранении пользователя'
+        ]);
     }
 
-    public function auth(Request $request)
+    public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'device_name' => 'required',
+        $formData = $request->only([
+            'email',
+            'password',
         ]);
 
-        $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (Auth::attempt($formData)) {
+            $qwer = Auth::user();
+            return redirect()->intended(route('note.list'));
+        }else {
             throw ValidationException::withMessages([
                 'email' => ['Неправильный email'],
+                'password' => ['Неправильный password'],
             ]);
         }
-        return $user->createToken($request->device_name)->plainTextToken;
-//        $credentials = $request->validate([
-//            'email' => ['required', 'email'],
-//            'password' => 'required',
-//        ]);
-//        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
-//            $user = Auth::user();
-//            $user->createToken($credentials['password']);
-//            return new UserResource($user);
-//        }
+    }
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect(route('user.login'));
+
     }
 }

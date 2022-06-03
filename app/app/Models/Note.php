@@ -29,4 +29,9 @@ class Note extends Model
     public function favoriteUser(){
         return $this->belongsToMany(User::class,'favorites', 'note_id', 'user_id');
     }
+    public function getPhotosAttribute($value){
+        $photos = json_decode($value);
+        return $photos;
+    }
+
 }
