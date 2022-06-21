@@ -4,15 +4,13 @@ namespace App\Http\Requests\Notice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FavoriteRequest extends FormRequest
-{
+class FavoriteRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -21,10 +19,9 @@ class FavoriteRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            'note_id'=>'Integer'
+            'note_id' => 'Integer'
         ];
     }
 }

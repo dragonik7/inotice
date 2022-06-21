@@ -9,7 +9,6 @@
       <path value="$PROJECT_DIR$/app/vendor/nesbot/carbon" />
       <path value="$PROJECT_DIR$/app/vendor/laravel/framework" />
       <path value="$PROJECT_DIR$/app/vendor/phpunit/php-invoker" />
-      <path value="$PROJECT_DIR$/app/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/app/vendor/phpunit/php-code-coverage" />
       <path value="$PROJECT_DIR$/app/vendor/laravel/serializable-closure" />
       <path value="$PROJECT_DIR$/app/vendor/myclabs/deep-copy" />
@@ -115,9 +114,10 @@
       <path value="$PROJECT_DIR$/app/vendor/asm89/stack-cors" />
       <path value="$PROJECT_DIR$/app/vendor/predis/predis" />
       <path value="$PROJECT_DIR$/app/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/app/vendor/laravel/sanctum" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/app/vendor/autoload.php" />

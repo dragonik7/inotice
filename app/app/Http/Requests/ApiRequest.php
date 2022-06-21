@@ -6,15 +6,13 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-abstract class ApiRequest extends FormRequest
-{
+abstract class ApiRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize(): bool
-    {
+    public function authorize(): bool {
         return true;
     }
 
@@ -24,8 +22,7 @@ abstract class ApiRequest extends FormRequest
      * @return array
      */
 
-    protected function failedValidation(Validator $validator)
-    {
+    protected function failedValidation(Validator $validator) {
         throw new HttpResponseException(response()->json(['data' => ['errors' => $validator->errors()]], 422));
     }
 
@@ -34,8 +31,7 @@ abstract class ApiRequest extends FormRequest
     /**
      * @return array
      */
-    public function validated(): array
-    {
+    public function validated(): array {
         return $this->request->all();
     }
 }

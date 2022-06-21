@@ -4,15 +4,13 @@ namespace App\Http\Requests\Notice;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SubscriberRequest extends FormRequest
-{
+class SubscriberRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -21,8 +19,7 @@ class SubscriberRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             'user_id' => 'Integer',
         ];

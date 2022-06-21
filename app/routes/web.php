@@ -22,7 +22,7 @@ Route::group(
     ['prefix' => '/notice'],
     function () {
         Route::group(
-            ['prefix' => '/notes'],
+            ['prefix' => '/notes', 'middleware' => 'auth:sanctum'],
             function () {
                 Route::get('', 'NotesController@list')->name('note.list');
                 Route::get('/detail', 'NotesController@detail')->name('note.detail');
@@ -33,13 +33,14 @@ Route::group(
                 Route::post('', 'NotesController@store')->name('note.store');
 
 
+                Route::get('/edit', 'NotesController@edit')->name('note.edit');
                 Route::patch('', 'NotesController@update')->name('note.update');
 
-                Route::delete('/detail', 'NotesController@Destroy')->name('note.destroy');
+                Route::delete('/detail', 'NotesController@destroy')->name('note.destroy');
             });
 
         Route::group(
-            ['prefix' => '/tags'],
+            ['prefix' => '/tags', 'middleware' => 'auth:sanctum'],
             function () {
                 Route::post('/create', 'TagsController@create');
                 Route::delete('/delete', 'TagsController@delete');
@@ -61,24 +62,31 @@ Route::group(
                 Route::get('/search', 'UserController@search')->name('user.search');
                 Route::get('/detail', 'UserController@detail')->name('user.detail');
 
-                Route::get('/registration', function (){if(Auth::check()){return redirect(route('note.list'));}return view('user.registration');})->name('user.reg');
-                Route::post('/registration', 'UserController@registration')->name('user.registration');
-
-                Route::get('/login', function (){
-                    if(Auth::check()) {
+                Route::get('/registration', function () {
+                    if (Auth::check()) {
                         return redirect(route('note.list'));
                     }
-                    return view('user.auth');})->name('user.auth');
+                    return view('user.registration');
+                })->name('user.reg');
+                Route::post('/registration', 'UserController@registration')->name('user.registration');
+
+                Route::get('/login', function () {
+                    if (Auth::check()) {
+                        return redirect(route('note.list'));
+                    }
+                    return view('user.auth');
+                })->name('user.auth');
                 Route::post('/login', 'UserController@login')->name('user.login');
-                Route::get('/logout','UserController@logout')->name('user.logout');
+                Route::get('/logout', 'UserController@logout')->name('user.logout');
 
                 Route::patch('', 'UserController@update')->name('user.update');
             });
         Route::group(
-            ['prefix' => '/sub'],
+            ['prefix' => '/sub', 'middleware' => 'auth:sanctum'],
             function () {
                 Route::post('', 'SubscriberController@createSub')->name('sub.create');
                 Route::delete('', 'SubscriberController@destroySub')->name('sub.destroy');
             });
     }
 );
+Auth::routes();

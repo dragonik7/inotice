@@ -19,20 +19,24 @@
             </div>
             <div class="mb-3 align-items-sm-center">
                 <div class="text-left"><label class="">Photo</label></div>
-                <div><input type="file" name="photos" class="form-control" id="photos"></div>
+                <div><input type="file" multiple name="photos[]" class="form-control" id="photos"></div>
                 @error('photos')
                 <p>{{$message}}</p>
                 @enderror
             </div>
             <div class="mb-3 align-items-sm-center">
                 <div class="text-left"><label class="">Tag</label></div>
-                <div><input type="number" name="tag_id" class="form-control" id="tag_id"></div>
+                <div><input type="number" name="tag_id" class="form-control" id="tag_id">
+
+                </div>
                 @error('tag_id')
                 <p>{{$message}}</p>
                 @enderror
             </div>
         </div>
         <button type="submit" class="btn btn-success">Create</button>
-        <a href="{{route('note.list')}}"><button type="button"  class="btn btn-secondary">Back</button></a>
+        <a href="{{route('note.list')}}">
+            <button type="button" class="btn btn-secondary">Back</button>
+        </a>
     </form>
 @endsection

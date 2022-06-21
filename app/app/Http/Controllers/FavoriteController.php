@@ -9,12 +9,10 @@ use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 
 
-class FavoriteController extends Controller
-{
+class FavoriteController extends Controller {
     protected $message;
 
-    public function create(FavoriteRequest $request)
-    {
+    public function create(FavoriteRequest $request) {
         $data = $request->input();
         $data['user_id'] = Auth::id();
         $is_exist = Favorite::where('note_id', '=', $data['note_id'])
@@ -31,8 +29,7 @@ class FavoriteController extends Controller
 
     }
 
-    public function list()
-    {
+    public function list() {
         $userId = Auth::id();
         $noteslist = Note::query()
             ->rightJoin('favorites', 'notes.id', '=', 'favorites.note_id')

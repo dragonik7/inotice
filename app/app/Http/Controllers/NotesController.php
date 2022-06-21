@@ -10,8 +10,7 @@ use App\Models\Note;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
-class NotesController extends Controller
-{
+class NotesController extends Controller {
     protected $message;
 
 //    public function list(NoteRequest $request)
@@ -21,15 +20,13 @@ class NotesController extends Controller
 //        $notesList = NoteResource::collection($notesList);
 //        return view('note.list', compact('notesList'));
 //    }
-    public function list()
-    {
+    public function list() {
         $notesList = Note::paginate(12);
-        $notesList = NoteResource::collection($notesList);
+        //return NoteResource::collection($notesList);
         return view('note.list', compact('notesList'));
     }
 
-    public function detail(NoteRequest $request)
-    {
+    public function detail(NoteRequest $request) {
         $noteId = $request->get('id');
         $note = Note::find($noteId);
         $userName = $note->users->name;
@@ -38,13 +35,12 @@ class NotesController extends Controller
         return view('note.detail', compact('note', 'userName', 'tagName'));
     }
 
-    public function store(NoteRequest $request)
-    {
+    public function store(NoteRequest $request) {
         $data = $request->input();
         if ($request->hasFile('photos')) {
             $paths = array();
             foreach ($request->file('photos') as $photo) {
-                $paths[] = env('APP_URL') . 'storage/' . $photo->store('photos_notes', 'public');
+                $paths[] = 'storage/' . $photo->store('photos_notes', 'public');
             }
             $data['photos'] = json_encode($paths);
         }
@@ -53,34 +49,29 @@ class NotesController extends Controller
         return redirect()->route('note.list');
     }
 
-    public function create()
-    {
+    public function create() {
         $tags = Tag::all();
         return view('note.create', compact('tags'));
     }
 
-    public function edit(NoteRequest $request)
-    {
+    public function edit(NoteRequest $request) {
         $tags = Tag::all();
         $post = Note::find($request->get('id'));
         return view('post.edit', compact('tags', 'post'));
     }
 
-    public function update(NoteRequest $request)
-    {
+    public function update(NoteRequest $request) {
         $data = $request->input();
         Note::find($request->get('id'))->update($data);
 
     }
 
-    public function destroy(NoteRequest $request)
-    {
+    public function destroy(NoteRequest $request) {
         $note = $request->get('id');
         Note::find($note)->delete();
     }
 
-    public function filter(FilterNoteRequest $request)
-    {
+    public function filter(FilterNoteRequest $request) {
         $data = $request->input();
         $filter = app()->make(NoteFilter::class, ['queryParams' => array_filter($data)]);
         $note = Note::filter($filter)->get();

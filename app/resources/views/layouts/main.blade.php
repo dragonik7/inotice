@@ -23,11 +23,27 @@
                     </ul>
                 </li>
             </ul>
+
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 @if(\Illuminate\Support\Facades\Auth::check())
-                    <li class="nav-item ms-auto"><a class="navbar-text nav-link active" href="{{route('user.logout')}}">
-                            <button type="button" class="btn btn-success">Logout</button>
-                        </a></li>
+                    <li class="nav-item dropdown ">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            {{Str::words(\Illuminate\Support\Facades\Auth::user()->name, 2,'')}}
+                            <img src="{{\Illuminate\Support\Facades\Auth::user()->avatar}}" class="rounded-3"
+                                 height="30px" width="30px">
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{route('user.logout')}}">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item ms-auto">
+
+                    </li>
+                    <li class="nav-item ms-auto">
+
+                    </li>
                 @else
                     <li class="nav-item ms-auto"><a class="navbar-text nav-link active" href="{{route('user.login')}}">
                             <button class="btn btn-primary">login</button>

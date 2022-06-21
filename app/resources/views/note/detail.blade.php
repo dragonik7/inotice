@@ -6,9 +6,26 @@
         <div><p>Создатель: {{$userName}}</p></div>
         <div><p>Тег: {{$tagName}}</p></div>
         <div class="m0-auto flex-row">
-            @for($i=0; $i < count($note->photos);$i++)
-                <div class="mx-sm-4"><img src="{{$note->photos["$i"]}}" height="400px" width="400px"></div>
-            @endfor
+            @foreach($note->photos as $photo)
+                <div class="mx-sm-4"><img src="{{$photo}}" height="400px" width="400px"></div>
+            @endforeach
+        </div>
+        <div class=''>
+            <a href="{{route('note.list')}}">
+                <button class="btn btn-secondary">
+                    back
+                </button>
+            </a>
+            <a href="{{route('note.edit',['id'=>$note->id])}}">
+                <button class="btn btn-primary">
+                    edit
+                </button>
+            </a>
+            <a href="{{route('note.destroy',['id'=>$note->id])}}">
+                <button class="btn btn-danger">
+                    delete
+                </button>
+            </a>
         </div>
     </div>
 @endsection

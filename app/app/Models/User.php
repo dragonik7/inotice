@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const ROLE_USER = 1;
+    public const ROLE_ADMIN = 2;
     /**
      * The attributes that are mass assignable.
      *
@@ -22,9 +22,9 @@ class User extends Authenticatable
         'email',
         'avatar',
         'password',
+        'role_id',
         'email_verified'
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -43,13 +43,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function notes(){
-        return $this->hasMany(Note::class,'user_id', 'id');
+
+    public function notes() {
+        return $this->hasMany(Note::class, 'user_id', 'id');
     }
-    public function tags(){
+
+    public function tags() {
         return $this->hasMany(Tag::class, 'user_id', 'id');
     }
-    public function favoriteNote(){
-        return $this->belongsToMany(Note::class,'favorites','user_id','note_id');
+
+    public function favoriteNote() {
+        return $this->belongsToMany(Note::class, 'favorites', 'user_id', 'note_id');
+    }
+
+    public function getAvatarAttribute($value) {
+        return env('APP_URL') . json_decode($value);
     }
 }
