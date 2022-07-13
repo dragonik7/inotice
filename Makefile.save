@@ -1,0 +1,42 @@
+
+Сбилдить контейнеры
+    # билдит все контейнеры описанные в docker-compose файле 
+    docker-compose build 
+
+Запустить контейнеры:
+    # Поднимет все контейнеры записаные в docker-compose файле. Если контейнеры не сбилдены
+    # сам их сбилдит. Если вы изменили вайлы докера нужно сбилдить заново перед запуском
+    docker-compose up -d
+
+Удалить контейнеры:
+    # Удаляяет контейнеры
+    docker-compose down
+
+Сбилдить образы
+    # Билдит все докер образы.
+    docker-compose build
+
+    #  Удаляет старый кеш и билдит с нуля (дольше будет билдить)
+    docker-compose build --no-cache
+
+
+
+
+# следующие команды для носителей виндовса
+
+
+# для установки пакетов через композер
+composer-install:
+	docker-compose exec php-cli composer install --prefer-source --no-interaction
+
+# для обновления пакетов если добавите новые пакеты или обновите
+composer-update:
+	docker-compose exec php-cli composer update --prefer-source --no-interaction
+
+# для того чтобы запустить миграции
+migrate:
+	docker-compose exec php-cli php artisan migrate
+
+
+storage-link:
+    docker-compose exec php-cli-admin php artisan storage:link
